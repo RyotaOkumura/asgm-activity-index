@@ -4,4 +4,7 @@ __pycache__/
 .pytest_cache/
 runs/
 results/
-data/
+data/*
+!data/pan_asgm/
+data/pan_asgm/*
+!data/pan_asgm/.gitkeep
