@@ -18,7 +18,7 @@ def test_average_over_superpixels_keeps_distribution():
 def test_slic_outputs_contiguous_labels():
     rng = np.random.default_rng(0)
     raw = rng.integers(0, 4000, (4, 60, 60), dtype=np.uint16)
-    for seg in (slic_reflectance(raw, 50), slic_false_color(raw[:3], 50)):
+    for seg in (slic_reflectance(raw[:3], 50), slic_false_color(raw[:3], 50)):
         assert seg.shape == (60, 60)
         assert np.array_equal(np.unique(seg), np.arange(seg.max() + 1))
 

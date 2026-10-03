@@ -2,8 +2,8 @@
 
 Two superpixel sets are used, as in the paper:
 
-* ``reflectance``: SLIC on the four bands B04/B03/B02/B08 (reflectance / 10000,
-  min-max scaled per image). Used for the segmentation benchmark.
+* ``reflectance``: SLIC on B08/B04/B03 reflectance (/ 10000, clipped to [0, 1],
+  then min-max scaled per image). Used for the segmentation benchmark.
 * ``false_color``: SLIC on the NIR-R-G false-color image
   ``clip(band / 4000, 0, 1) * 255`` (B08/B04/B03, uint8). Used for the
   Activity Index on every year.
@@ -22,7 +22,7 @@ N_SEGMENTS = 1350
 COMPACTNESS = 10.0
 SIGMA = 1.0
 
-REFLECTANCE_BANDS = ["B04", "B03", "B02", "B08"]
+REFLECTANCE_BANDS = ["B08", "B04", "B03"]
 FALSE_COLOR_BANDS = ["B08", "B04", "B03"]
 FALSE_COLOR_DIV = 4000.0
 VARIANTS = ("reflectance", "false_color")
@@ -37,7 +37,7 @@ def _contiguous(seg: np.ndarray) -> np.ndarray:
 
 
 def slic_reflectance(raw: np.ndarray, n_segments: int = N_SEGMENTS) -> np.ndarray:
-    """SLIC labels (H, W) from raw B04/B03/B02/B08 reflectance (4, H, W)."""
+    """SLIC labels (H, W) from raw B08/B04/B03 reflectance (3, H, W)."""
     image = np.clip(raw.astype(np.float32) / 10000.0, 0.0, 1.0)
     hwc = np.transpose(image, (1, 2, 0)).astype(np.float64)
     lo, hi = float(hwc.min()), float(hwc.max())
