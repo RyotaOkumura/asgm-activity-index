@@ -33,9 +33,14 @@ Face Hub on first use.
 
 ## Data
 
-<!-- TODO: Hugging Face dataset link -->
+Pan-ASGM is hosted on the Hugging Face Hub
+([oryota/pan-asgm](https://huggingface.co/datasets/oryota/pan-asgm)).
 
-Download Pan-ASGM and place it as follows (`data/pan_asgm` below):
+```bash
+uv run hf download oryota/pan-asgm --repo-type dataset --local-dir data/pan_asgm
+```
+
+The layout is:
 
 ```
 data/pan_asgm/
