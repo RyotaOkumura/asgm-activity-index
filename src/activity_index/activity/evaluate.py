@@ -24,11 +24,11 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from panasgm.activity import baselines
-from panasgm.activity.estimator import (
+from activity_index.activity import baselines
+from activity_index.activity.estimator import (
     SIGMA_A, TRAILING_W, TRUNCATE, Z, activity_index, interval_stat, smooth, windows_inside,
 )
-from panasgm.data import ACTIVE_POND_IDX, ANNOTATED_YEARS, IGNORE_INDEX
+from activity_index.data import ACTIVE_POND_IDX, ANNOTATED_YEARS, IGNORE_INDEX
 
 INTERVALS = ((2016, 2020), (2020, 2024))
 N_EFF_MIN = 0.05

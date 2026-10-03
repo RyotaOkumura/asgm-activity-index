@@ -15,8 +15,8 @@ from pathlib import Path
 import numpy as np
 from tqdm import tqdm
 
-from panasgm.data import ANNOTATED_YEARS, TileKey, list_tiles, list_years, load_folds, read_bands
-from panasgm.superpixels import (
+from activity_index.data import ANNOTATED_YEARS, TileKey, list_tiles, list_years, load_folds, read_bands
+from activity_index.superpixels import (
     FALSE_COLOR_BANDS, REFLECTANCE_BANDS, slic_false_color, slic_reflectance, superpixel_path,
 )
 

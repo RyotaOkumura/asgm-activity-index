@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import torch
 
-from panasgm.superpixels import average_over_superpixels, false_color, slic_false_color, slic_reflectance
+from activity_index.superpixels import average_over_superpixels, false_color, slic_false_color, slic_reflectance
 
 
 def test_average_over_superpixels_keeps_distribution():
@@ -36,7 +36,7 @@ def test_false_color_scaling():
     ({"name": "prithvi", "backbone": "prithvi_eo_v2_300"}, 6, 224),
 ])
 def test_models_return_logits_at_input_size(cfg, bands, size):
-    from panasgm.models import build_model
+    from activity_index.models import build_model
     model = build_model(cfg, bands).eval()
     with torch.no_grad():
         out = model(torch.randn(1, bands, size, size))

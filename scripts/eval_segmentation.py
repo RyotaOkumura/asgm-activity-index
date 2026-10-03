@@ -23,10 +23,10 @@ import torch.nn.functional as F
 import yaml
 from tqdm import tqdm
 
-from panasgm.data import CLASSES, SegmentationDataset, load_folds, loso_split
-from panasgm.metrics import tile_metrics
-from panasgm.models import build_model, load_checkpoint
-from panasgm.superpixels import average_over_superpixels, load_superpixels
+from activity_index.data import CLASSES, SegmentationDataset, load_folds, loso_split
+from activity_index.metrics import tile_metrics
+from activity_index.models import build_model, load_checkpoint
+from activity_index.superpixels import average_over_superpixels, load_superpixels
 
 
 @torch.no_grad()

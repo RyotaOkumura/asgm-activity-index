@@ -2,11 +2,11 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-import panasgm.data as data
-from panasgm.data import (
+import activity_index.data as data
+from activity_index.data import (
     IGNORE_INDEX, SegmentationDataset, TileKey, list_tiles, list_years, load_mask, loso_split, preprocess,
 )
-from panasgm.train import train
+from activity_index.train import train
 
 
 def test_loso_split_never_puts_test_site_in_train(tiny_root):

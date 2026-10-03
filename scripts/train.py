@@ -15,8 +15,8 @@ from pathlib import Path
 
 import yaml
 
-from panasgm.data import load_folds, loso_split
-from panasgm.train import train
+from activity_index.data import load_folds, loso_split
+from activity_index.train import train
 
 
 def main() -> None:

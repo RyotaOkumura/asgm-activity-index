@@ -17,9 +17,9 @@ from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, SequentialLR
 from torch.utils.data import DataLoader
 
-from panasgm.data import SegmentationDataset, TileKey
-from panasgm.losses import CEDiceLoss
-from panasgm.models import build_model
+from activity_index.data import SegmentationDataset, TileKey
+from activity_index.losses import CEDiceLoss
+from activity_index.models import build_model
 
 logger = logging.getLogger(__name__)
 

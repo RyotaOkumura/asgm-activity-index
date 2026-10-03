@@ -24,12 +24,12 @@ import torch
 import yaml
 from tqdm import tqdm
 
-from panasgm.data import (
+from activity_index.data import (
     ACTIVE_POND_IDX, CLOUD_IDX, CLOUD_SHADOW_IDX, TileKey, list_tiles, list_years, load_folds,
     preprocess, read_bands,
 )
-from panasgm.models import build_model, load_checkpoint
-from panasgm.superpixels import average_over_superpixels, load_superpixels
+from activity_index.models import build_model, load_checkpoint
+from activity_index.superpixels import average_over_superpixels, load_superpixels
 
 
 @torch.no_grad()

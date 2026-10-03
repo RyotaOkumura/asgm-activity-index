@@ -8,7 +8,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from panasgm.data import NUM_CLASSES
+from activity_index.data import NUM_CLASSES
 
 
 def build_model(model_cfg: dict, in_channels: int) -> nn.Module:
@@ -18,22 +18,22 @@ def build_model(model_cfg: dict, in_channels: int) -> nn.Module:
     """
     name = model_cfg["name"]
     if name == "unet":
-        from panasgm.models.unet import create_unet
+        from activity_index.models.unet import create_unet
         return create_unet(model_cfg.get("encoder", "resnet50"), in_channels, NUM_CLASSES)
     if name == "segformer":
-        from panasgm.models.segformer import SegFormer
+        from activity_index.models.segformer import SegFormer
         return SegFormer(model_cfg["pretrained"], NUM_CLASSES, in_channels)
     if name == "mask2former":
-        from panasgm.models.mask2former import Mask2Former
+        from activity_index.models.mask2former import Mask2Former
         return Mask2Former(model_cfg["pretrained"], NUM_CLASSES, in_channels)
     if name == "prithvi":
-        from panasgm.models.prithvi import PrithviSegmentation
+        from activity_index.models.prithvi import PrithviSegmentation
         return PrithviSegmentation(NUM_CLASSES, model_cfg.get("backbone", "prithvi_eo_v2_300"))
     raise ValueError(f"unknown model: {name}")
 
 
 def load_checkpoint(model: nn.Module, path: str, device: str = "cpu") -> nn.Module:
-    """Load weights saved by ``panasgm.train`` (or a ``state_dict`` file)."""
+    """Load weights saved by ``activity_index.train`` (or a ``state_dict`` file)."""
     state = torch.load(path, map_location=device, weights_only=False)
     if isinstance(state, dict) and "model_state_dict" in state:
         state = state["model_state_dict"]

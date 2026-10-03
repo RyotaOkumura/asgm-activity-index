@@ -17,7 +17,7 @@ from __future__ import annotations
 import numpy as np
 import ruptures as rpt
 
-from panasgm.activity.estimator import weighted_ols
+from activity_index.activity.estimator import weighted_ols
 
 # BFAST-equiv.
 BREAK_YEARS = (2017, 2018, 2019, 2020, 2021, 2022, 2023)  # >= 3 points per segment

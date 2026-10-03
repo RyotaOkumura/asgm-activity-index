@@ -19,8 +19,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from panasgm.activity.evaluate import METHODS, TileSeries, evaluate_run
-from panasgm.data import ANNOTATED_YEARS, TileKey, load_folds, load_mask
+from activity_index.activity.evaluate import METHODS, TileSeries, evaluate_run
+from activity_index.data import ANNOTATED_YEARS, TileKey, load_folds, load_mask
 
 
 def load_run(data_root: Path, ts_dir: Path, site: str):

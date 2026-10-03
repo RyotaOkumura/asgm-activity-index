@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from transformers import Mask2FormerForUniversalSegmentation
 
-from panasgm.models.segformer import widen_conv
+from activity_index.models.segformer import widen_conv
 
 
 class Mask2Former(nn.Module):

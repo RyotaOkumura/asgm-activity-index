@@ -92,7 +92,7 @@ uv run python scripts/eval_activity.py --data-root data/pan_asgm \
 
 ## The Activity Index in short
 
-`src/panasgm/activity/estimator.py` implements the estimator
+`src/activity_index/activity/estimator.py` implements the estimator
 A = M ∘ T ∘ A_smooth on the per-pixel series of superpixel-averaged
 `active_pond` probabilities:
 
@@ -103,7 +103,7 @@ A = M ∘ T ∘ A_smooth on the per-pixel series of superpixel-averaged
 - **M**: the reliability filter keeps beta where |beta| > 2 SE.
 
 Evaluation details (eligible pixels, interval aggregation, and baseline
-settings) are documented in `src/panasgm/activity/evaluate.py` and
+settings) are documented in `src/activity_index/activity/evaluate.py` and
 `baselines.py`.
 
 ## Tests
