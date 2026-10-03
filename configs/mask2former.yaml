@@ -1,0 +1,17 @@
+model:
+  name: mask2former
+  pretrained: facebook/mask2former-swin-base-ade-semantic
+data:
+  bands: [B04, B03, B02, B08]
+  image_size: 200
+  normalize_mode: imagenet
+training:
+  epochs: 50
+  batch_size: 2
+  lr: 3.0e-5
+  weight_decay: 0.01
+  warmup_epochs: 5
+  num_workers: 4
+loss:
+  ce_weight: 1.0
+  dice_weight: 1.0

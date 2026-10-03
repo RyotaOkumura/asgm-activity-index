@@ -1,0 +1,19 @@
+# The Prithvi-EO-2.0 backbone is frozen; only the decoder is trained.
+# Inputs are resized to 224 px; outputs are resized back to 200 px for evaluation.
+model:
+  name: prithvi
+  backbone: prithvi_eo_v2_300
+data:
+  bands: [B02, B03, B04, B8A, B11, B12]
+  image_size: 224
+  normalize_mode: sentinel
+training:
+  epochs: 50
+  batch_size: 8
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  warmup_epochs: 3
+  num_workers: 4
+loss:
+  ce_weight: 1.0
+  dice_weight: 1.0

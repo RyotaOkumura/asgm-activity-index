@@ -1,0 +1,17 @@
+model:
+  name: segformer
+  pretrained: nvidia/segformer-b2-finetuned-ade-512-512
+data:
+  bands: [B04, B03, B02, B08]
+  image_size: 200
+  normalize_mode: imagenet
+training:
+  epochs: 50
+  batch_size: 4
+  lr: 1.0e-4
+  weight_decay: 0.01
+  warmup_epochs: 5
+  num_workers: 4
+loss:
+  ce_weight: 1.0
+  dice_weight: 1.0

@@ -1,0 +1,17 @@
+model:
+  name: unet
+  encoder: resnet50
+data:
+  bands: [B04, B03, B02, B08]
+  image_size: 200
+  normalize_mode: imagenet
+training:
+  epochs: 50
+  batch_size: 8
+  lr: 1.0e-3
+  weight_decay: 0.01
+  warmup_epochs: 5
+  num_workers: 4
+loss:
+  ce_weight: 1.0
+  dice_weight: 1.0
