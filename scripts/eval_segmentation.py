@@ -1,7 +1,7 @@
 """Segmentation benchmark (appendix table): per-tile metrics after superpixel averaging.
 
 For each fold and seed, the model predicts the 27 held-out tiles. Class
-probabilities are averaged over the ``reflectance`` superpixels, then IoU,
+probabilities are averaged over superpixels, then IoU,
 Brier, and ECE are computed per tile. The table is the mean over all tiles,
 folds, and seeds (per-class IoU ignores tiles where the class is absent).
 
@@ -41,9 +41,8 @@ def evaluate_checkpoint(cfg: dict, data_root: Path, sp_root: Path, fold: int,
     for key, item in zip(test_keys, dataset):
         logits = model(item["image"][None].to(device))
         mask = item["mask"]
-        segments = load_superpixels(sp_root, "reflectance", key.site, key.stem)
+        segments = load_superpixels(sp_root, key.site, key.stem)
         if logits.shape[-2:] != segments.shape:
-            # Models run at a different size (Prithvi: 224 px) are compared at the tile size.
             logits = F.interpolate(logits, size=segments.shape, mode="bilinear", align_corners=False)
             mask = F.interpolate(mask[None, None].float(), size=segments.shape, mode="nearest")[0, 0].long()
         probs = torch.softmax(logits, dim=1)[0].cpu().numpy()
@@ -55,7 +54,7 @@ def evaluate_checkpoint(cfg: dict, data_root: Path, sp_root: Path, fold: int,
 
 def summarize(df: pd.DataFrame) -> pd.Series:
     cols = [f"iou_{c}" for c in range(len(CLASSES))] + ["miou", "brier", "ece"]
-    out = df[cols].mean()  # pandas skips NaN, i.e. nanmean
+    out = df[cols].mean()
     out.index = [f"iou_{CLASSES[int(c[4:])]}" if c.startswith("iou_") else c for c in out.index]
     return out
 

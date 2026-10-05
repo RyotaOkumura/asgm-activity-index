@@ -1,7 +1,7 @@
 """Yearly front-end outputs (2016-2025) for the Activity Index.
 
 For each tile and year, the segmentation model's class probabilities are
-averaged over the ``false_color`` superpixels. Saved per tile:
+averaged over superpixels. Saved per tile:
 
   years       (T,)        float32
   p_active    (T, H, W)   float16  active_pond probability
@@ -43,7 +43,7 @@ def infer_tile(model, cfg: dict, data_root: Path, sp_root: Path, site: str, tile
         image = preprocess(read_bands(data_root, key, d["bands"]), d["bands"],
                            d["normalize_mode"], d["image_size"])
         probs = torch.softmax(model(torch.from_numpy(image)[None].to(device)), dim=1)[0].cpu().numpy()
-        probs = average_over_superpixels(probs, load_superpixels(sp_root, "false_color", site, key.stem))
+        probs = average_over_superpixels(probs, load_superpixels(sp_root, site, key.stem))
         cls = probs.argmax(axis=0).astype(np.uint8)
         p_active.append(probs[ACTIVE_POND_IDX].astype(np.float16))
         argmax.append(cls)

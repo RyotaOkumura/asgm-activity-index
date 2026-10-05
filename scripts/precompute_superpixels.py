@@ -1,7 +1,4 @@
-"""Compute the SLIC superpixels used for evaluation.
-
-* reflectance: labeled years only (segmentation benchmark)
-* false_color: every year (Activity Index)
+"""Compute SLIC superpixels for every image (written to <data-root>/superpixels).
 
 Usage:
   uv run python scripts/precompute_superpixels.py --data-root data/pan_asgm
@@ -15,10 +12,8 @@ from pathlib import Path
 import numpy as np
 from tqdm import tqdm
 
-from activity_index.data import ANNOTATED_YEARS, TileKey, list_tiles, list_years, load_folds, read_bands
-from activity_index.superpixels import (
-    FALSE_COLOR_BANDS, REFLECTANCE_BANDS, slic_false_color, slic_reflectance, superpixel_path,
-)
+from activity_index.data import TileKey, list_tiles, list_years, load_folds, read_bands
+from activity_index.superpixels import BANDS, compute_superpixels, superpixel_path
 
 
 def main() -> None:
@@ -34,15 +29,11 @@ def main() -> None:
             keys += [TileKey(site, y, tile) for y in list_years(args.data_root, site, tile)]
 
     for key in tqdm(keys):
-        jobs = [("false_color", FALSE_COLOR_BANDS, slic_false_color)]
-        if key.year in ANNOTATED_YEARS:
-            jobs.append(("reflectance", REFLECTANCE_BANDS, slic_reflectance))
-        for variant, bands, fn in jobs:
-            path = superpixel_path(out, variant, key.site, key.stem)
-            if path.exists():
-                continue
-            path.parent.mkdir(parents=True, exist_ok=True)
-            np.savez_compressed(path, segments=fn(read_bands(args.data_root, key, bands)))
+        path = superpixel_path(out, key.site, key.stem)
+        if path.exists():
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(path, segments=compute_superpixels(read_bands(args.data_root, key, BANDS)))
 
 
 if __name__ == "__main__":

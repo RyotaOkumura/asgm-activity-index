@@ -58,9 +58,6 @@ IMAGENET_NORM = {
 DEFAULT_NORM = (0.35, 0.20)
 
 
-# ---------------------------------------------------------------------------
-# File layout
-# ---------------------------------------------------------------------------
 
 @dataclass(frozen=True, order=True)
 class TileKey:
@@ -97,9 +94,6 @@ def list_years(data_root: Path, site: str, tile: str) -> list[int]:
     return sorted(years)
 
 
-# ---------------------------------------------------------------------------
-# Images and masks
-# ---------------------------------------------------------------------------
 
 def read_bands(data_root: Path, key: TileKey, bands: list[str]) -> np.ndarray:
     """Raw reflectance of the selected bands, (C, H, W) uint16."""
@@ -146,9 +140,6 @@ def load_mask(data_root: Path, key: TileKey) -> np.ndarray:
     return np.where(png == 0, IGNORE_INDEX, png - 1).astype(np.uint8)
 
 
-# ---------------------------------------------------------------------------
-# Leave-one-site-out splits
-# ---------------------------------------------------------------------------
 
 def load_folds(data_root: Path) -> dict[int, str]:
     """fold index -> held-out (test) site."""
@@ -177,9 +168,6 @@ def loso_split(data_root: Path, fold: int) -> tuple[list[TileKey], list[TileKey]
     return annotated_tiles(data_root, train_sites), annotated_tiles(data_root, [test_site])
 
 
-# ---------------------------------------------------------------------------
-# Torch dataset
-# ---------------------------------------------------------------------------
 
 class SegmentationDataset(Dataset):
     """Labeled tiles for training and evaluation."""

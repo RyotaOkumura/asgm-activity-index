@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import torch
 
-from activity_index.superpixels import average_over_superpixels, false_color, slic_false_color, slic_reflectance
+from activity_index.superpixels import average_over_superpixels, compute_superpixels, false_color
 
 
 def test_average_over_superpixels_keeps_distribution():
@@ -17,10 +17,10 @@ def test_average_over_superpixels_keeps_distribution():
 
 def test_slic_outputs_contiguous_labels():
     rng = np.random.default_rng(0)
-    raw = rng.integers(0, 4000, (4, 60, 60), dtype=np.uint16)
-    for seg in (slic_reflectance(raw[:3], 50), slic_false_color(raw[:3], 50)):
-        assert seg.shape == (60, 60)
-        assert np.array_equal(np.unique(seg), np.arange(seg.max() + 1))
+    raw = rng.integers(0, 4000, (3, 60, 60), dtype=np.uint16)
+    seg = compute_superpixels(raw, 50)
+    assert seg.shape == (60, 60)
+    assert np.array_equal(np.unique(seg), np.arange(seg.max() + 1))
 
 
 def test_false_color_scaling():

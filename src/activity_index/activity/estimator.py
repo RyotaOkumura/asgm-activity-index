@@ -9,9 +9,6 @@ superpixel averaging, and a cloud mask (T, H, W).
   Every year whose smoothed value is finite gets weight 1. Returns the
   slope beta and its standard error SE for each window end year.
 * M (reliability filter): keep beta where |beta| > z * SE, z = 2.
-
-The smoothed series is rounded through float16, as in the cached
-intermediates that produced the paper numbers.
 """
 
 from __future__ import annotations

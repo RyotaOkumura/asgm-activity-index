@@ -46,9 +46,6 @@ class TileSeries:
     argmax: np.ndarray      # (T, H, W) uint8, superpixel-averaged class
 
 
-# ---------------------------------------------------------------------------
-# Ground truth and eligible pixels
-# ---------------------------------------------------------------------------
 
 def gt_changes(masks: dict[int, np.ndarray]) -> dict[str, np.ndarray]:
     """GT signs from the three labeled years (masks remapped, 255 = unlabeled)."""
@@ -74,9 +71,6 @@ def excluded(eligible: np.ndarray, beta1: np.ndarray, beta2: np.ndarray, n_eff: 
     return (~eligible) | nonfinite | (n_eff < N_EFF_MIN) | ~np.isfinite(n_eff)
 
 
-# ---------------------------------------------------------------------------
-# Scores on pooled pixels
-# ---------------------------------------------------------------------------
 
 def _agreement(beta: np.ndarray, sign: np.ndarray, keep: np.ndarray) -> np.ndarray:
     sel = keep & (sign != 0) & np.isfinite(beta)
@@ -112,9 +106,6 @@ def reliable_direction_agreement(pool: dict[str, np.ndarray], z: float = Z) -> t
     return rate, (agree.size / n_changed if n_changed else float("nan"))
 
 
-# ---------------------------------------------------------------------------
-# One run (one fold and seed)
-# ---------------------------------------------------------------------------
 
 def evaluate_run(tiles: list[tuple[TileSeries, dict[int, np.ndarray]]],
                  w: int = TRAILING_W) -> dict[str, dict[str, float]]:
@@ -138,7 +129,6 @@ def evaluate_run(tiles: list[tuple[TileSeries, dict[int, np.ndarray]]],
         eligible = ~border_mask((H, W)) & ~gt["unlabeled"]
         gt_arrays = {"sign1": gt["sign1"], "sign2": gt["sign2"], "cum": gt["cum"]}
 
-        # Activity Index (soft probabilities) and the same estimator on hard labels.
         inputs = {
             "activity_index": series.p_active,
             "hard_labels_our_estimator": (series.argmax == ACTIVE_POND_IDX).astype(np.float32),
@@ -154,7 +144,6 @@ def evaluate_run(tiles: list[tuple[TileSeries, dict[int, np.ndarray]]],
                 beta_cum=np.nansum(beta_ts, axis=0),
                 excluded=excluded(eligible, beta1, beta2, n_eff), **gt_arrays)
 
-        # Hard-label stacking: end-point differences of the hard labels.
         year_idx = {int(y): i for i, y in enumerate(years.astype(int))}
         hard = {y: series.argmax[year_idx[y]] == ACTIVE_POND_IDX for y in ANNOTATED_YEARS}
         d = lambda a, b: (hard[b].astype(np.int8) - hard[a].astype(np.int8)).astype(np.float32)  # noqa: E731
@@ -162,7 +151,6 @@ def evaluate_run(tiles: list[tuple[TileSeries, dict[int, np.ndarray]]],
         add("hard_label_stacking", beta1=beta1, beta2=beta2, beta_cum=d(2016, 2024),
             excluded=excluded(eligible, beta1, beta2, n_eff), **gt_arrays)
 
-        # Breakpoint baselines on the smoothed series, cloudy years weighted 0.
         q, n_eff_q = smooth(series.p_active, series.cloud_mask)
         ts = q.transpose(1, 2, 0).reshape(-1, len(years))
         weights = (~series.cloud_mask).transpose(1, 2, 0).reshape(-1, len(years)).astype(np.float32)
@@ -173,7 +161,6 @@ def evaluate_run(tiles: list[tuple[TileSeries, dict[int, np.ndarray]]],
             excluded=excluded(eligible.ravel(), out["slope_full"], out["slope_full"], n_eff_q.ravel()),
             **gt_arrays)
 
-        # LandTrendr-equiv. is evaluated on a fixed random sample of eligible pixels.
         idx = np.where(eligible.ravel())[0]
         if len(idx) > baselines.LANDTRENDR_MAX_PIXELS:
             idx = rng.choice(idx, baselines.LANDTRENDR_MAX_PIXELS, replace=False)

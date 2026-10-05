@@ -58,7 +58,8 @@ Mask values are 0 = unlabeled and 1-7 = `vegetation`, `bare_ground`,
 ## Usage
 
 **1. Superpixels.** Both evaluations average class probabilities over SLIC
-superpixels. This writes `data/pan_asgm/superpixels/`.
+superpixels of the false-color image, the unit the labels were drawn on.
+This writes `data/pan_asgm/superpixels/`.
 
 ```bash
 uv run python scripts/precompute_superpixels.py --data-root data/pan_asgm
