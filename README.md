@@ -44,7 +44,7 @@ uv run python scripts/train.py --config configs/segformer_b2.yaml \
     --data-root data/pan_asgm --fold 0 --seed 1 --out runs/segformer_b2/fold0_seed1
 ```
 
-**3. Evaluate the segmentation model** (appendix table)
+**3. Evaluate the segmentation model**
 
 ```bash
 uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
@@ -52,7 +52,7 @@ uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
     --out results/segmentation/segformer_b2
 ```
 
-**4. Compute the Activity Index and compare it with the baselines** (Table 1)
+**4. Compute the Activity Index and compare it with the baselines**
 
 ```bash
 uv run python scripts/infer_timeseries.py --config configs/segformer_b2.yaml \
