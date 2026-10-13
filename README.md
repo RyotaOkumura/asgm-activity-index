@@ -1,9 +1,8 @@
 # Tracking Gold Mining Activity Behind Tropical Deforestation with Satellite Time Series (NeurIPS 2026 Workshop)
-[![Paper](https://img.shields.io/badge/Paper-OpenReview-8c1b13.svg)](https://openreview.net/forum?id=dBRczK795f)
 [![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-ffcc4d.svg)](https://huggingface.co/datasets/oryota/pan-asgm)
 
 This repository is the official code for the paper:
-> [**Tracking Gold Mining Activity Behind Tropical Deforestation with Satellite Time Series**](https://openreview.net/forum?id=dBRczK795f)  
+> **Tracking Gold Mining Activity Behind Tropical Deforestation with Satellite Time Series**  
 > Ryota Okumura, Kazuyo Hirose, Binze Wang, Kazuyo Matsubae, Yoko Yamakata  
 > NeurIPS 2026 Workshop on Tackling Climate Change with Machine Learning
 
