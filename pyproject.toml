@@ -3,7 +3,7 @@ name = "asgm-activity-index"
 version = "0.1.0"
 description = "Activity Index and Pan-ASGM benchmark: tracking artisanal gold mining activity with Sentinel-2 time series"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = { text = "CC-BY-NC-4.0" }
 requires-python = ">=3.10,<3.11"
 # Versions are pinned to the environment that produced the paper numbers.
 dependencies = [

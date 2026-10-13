@@ -132,5 +132,7 @@ uv run pytest -m weights         # builds the four models (downloads weights)
 
 ## License
 
-Code: MIT. Sentinel-2 imagery in Pan-ASGM contains modified Copernicus
-Sentinel data (2016-2025).
+The code and the Pan-ASGM labels, splits, and metadata are released under
+[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) for
+non-commercial use. The Sentinel-2 imagery in Pan-ASGM contains modified
+Copernicus Sentinel data (2016-2025) and is subject to the Copernicus data terms.
