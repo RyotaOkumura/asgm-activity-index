@@ -1,25 +1,17 @@
-# Pan-ASGM and the Activity Index
+# Tracking Gold Mining Activity Behind Tropical Deforestation with Satellite Time Series (NeurIPS 2026 Workshop)
+[![Paper](https://img.shields.io/badge/Paper-OpenReview-8c1b13.svg)](https://openreview.net/forum?id=dBRczK795f)
+[![Dataset](https://img.shields.io/badge/Dataset-Hugging%20Face-ffcc4d.svg)](https://huggingface.co/datasets/oryota/pan-asgm)
 
-Code for *Tracking Gold Mining Activity Behind Tropical Deforestation with
-Satellite Time Series* (NeurIPS 2026 Workshop on Tackling Climate Change with
-Machine Learning).
+This repository is the official code for the paper:
+> [**Tracking Gold Mining Activity Behind Tropical Deforestation with Satellite Time Series**](https://openreview.net/forum?id=dBRczK795f)  
+> Ryota Okumura, Kazuyo Hirose, Binze Wang, Kazuyo Matsubae, Yoko Yamakata  
+> NeurIPS 2026 Workshop on Tackling Climate Change with Machine Learning
 
-The **Activity Index** turns yearly Sentinel-2 imagery into a per-pixel record
-of artisanal and small-scale gold mining (ASGM) activity. It reads the yearly
-probability of *active ponds* (turbid ore-washing ponds) from a segmentation
-model and reports whether activity is expanding or declining, with a standard
-error and a reliability filter.
-
-**Pan-ASGM** is the multi-temporal dataset used to evaluate it: nine sites in
-five countries, a 6 km x 6 km area per site, yearly composites for 2016-2025,
-and seven-class labels for 2016, 2020, and 2024.
-
-This repository reproduces the experiments in the paper:
-
-| Experiment | Script |
-|---|---|
-| Segmentation benchmark of U-Net, SegFormer-B2, Mask2Former, and Prithvi-EO 2.0 under leave-one-site-out (LOSO) evaluation (appendix table) | `train.py`, `eval_segmentation.py` |
-| Activity Index vs. hard-label stacking, hard labels + our estimator, BFAST-equiv., and LandTrendr-equiv. (Table 1), and direction agreement behind the reliability filter | `infer_timeseries.py`, `eval_activity.py` |
+## Introduction
+The Activity Index turns yearly Sentinel-2 imagery into a per-pixel record of
+artisanal and small-scale gold mining activity, with a measure of confidence.
+We evaluate it on Pan-ASGM, a multi-temporal segmentation dataset of nine
+mining sites in five countries.
 
 ## Installation
 
@@ -27,55 +19,33 @@ This repository reproduces the experiments in the paper:
 uv sync
 ```
 
-Python 3.10. Package versions are pinned to those that produced the paper
-numbers. Pretrained weights for the backbones are downloaded from the Hugging
-Face Hub on first use.
-
 ## Data
-
-Pan-ASGM is hosted on the Hugging Face Hub
-([oryota/pan-asgm](https://huggingface.co/datasets/oryota/pan-asgm)).
 
 ```bash
 uv run hf download oryota/pan-asgm --repo-type dataset --local-dir data/pan_asgm
 ```
 
-The layout is:
-
-```
-data/pan_asgm/
-├── images/{site}/{site}_{year}_{tile}.tif   13-band Sentinel-2 L1C, uint16, 200 x 200 px (10 m)
-├── masks/{site}/{site}_{year}_{tile}.png    labels for 2016, 2020, 2024
-├── splits/loso.yaml                         fold -> held-out site
-└── metadata.csv                             country and acquisition month per image
-```
-
-`tile` is `r{row}c{col}` in the 3 x 3 grid of 2 km tiles of a site. Band order
-in each image is B01, B02, B03, B04, B05, B06, B07, B08, B8A, B09, B10, B11, B12.
-Mask values are 0 = unlabeled and 1-7 = `vegetation`, `bare_ground`,
-`active_pond`, `inactive_pond`, `artifact`, `cloud`, `cloud_shadow`.
+See the [dataset card](https://huggingface.co/datasets/oryota/pan-asgm) for the file format.
 
 ## Usage
 
-**1. Superpixels.** Both evaluations average class probabilities over SLIC
-superpixels of the false-color image, the unit the labels were drawn on.
-This writes `data/pan_asgm/superpixels/`.
+Configs for the four segmentation models are in `configs/`
+(`unet`, `segformer_b2`, `mask2former`, `prithvi`). The commands below use SegFormer-B2.
+
+**1. Compute superpixels**
 
 ```bash
 uv run python scripts/precompute_superpixels.py --data-root data/pan_asgm
 ```
 
-**2. Training.** One model per fold (9 folds, held-out site in
-`splits/loso.yaml`) and seed (1, 2, 3). Training runs for a fixed 50 epochs
-and keeps the final weights. The held-out site is not read during training.
+**2. Train a segmentation model** (one fold and seed; the held-out site is not used)
 
 ```bash
 uv run python scripts/train.py --config configs/segformer_b2.yaml \
     --data-root data/pan_asgm --fold 0 --seed 1 --out runs/segformer_b2/fold0_seed1
 ```
 
-**3. Segmentation benchmark.** Per-tile class IoU, mIoU, Brier score, and ECE
-on the held-out tiles, averaged over tiles, folds, and seeds.
+**3. Evaluate the segmentation model** (appendix table)
 
 ```bash
 uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
@@ -83,8 +53,7 @@ uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
     --out results/segmentation/segformer_b2
 ```
 
-**4. Activity Index.** Yearly SegFormer-B2 outputs for 2016-2025 on the
-held-out site of each fold, then Table 1.
+**4. Compute the Activity Index and compare it with the baselines** (Table 1)
 
 ```bash
 uv run python scripts/infer_timeseries.py --config configs/segformer_b2.yaml \
@@ -94,30 +63,7 @@ uv run python scripts/eval_activity.py --data-root data/pan_asgm \
     --timeseries results/timeseries --out results/activity
 ```
 
-`scripts/run_loso.sh <model> data/pan_asgm` runs steps 2-4 for all folds and seeds.
-
-## The Activity Index in short
-
-`src/activity_index/activity/estimator.py` implements the estimator
-A = M ∘ T ∘ A_smooth on the per-pixel series of superpixel-averaged
-`active_pond` probabilities:
-
-- **A_smooth**: Gaussian smoothing (sigma = 9 px) weighted by cloud-free
-  pixels, so cloudy pixels borrow evidence from clear neighbors.
-- **T**: least-squares slope beta and its standard error SE over a trailing
-  three-year window. The value for year t uses no later years.
-- **M**: the reliability filter keeps beta where |beta| > 2 SE.
-
-Evaluation details (eligible pixels, interval aggregation, and baseline
-settings) are documented in `src/activity_index/activity/evaluate.py` and
-`baselines.py`.
-
-## Tests
-
-```bash
-uv run pytest -m "not weights"   # fast, synthetic data only
-uv run pytest -m weights         # builds the four models (downloads weights)
-```
+`bash scripts/run_loso.sh segformer_b2 data/pan_asgm` runs steps 2-4 for all 9 folds and 3 seeds.
 
 ## Citation
 
@@ -133,6 +79,6 @@ uv run pytest -m weights         # builds the four models (downloads weights)
 ## License
 
 The code and the Pan-ASGM labels, splits, and metadata are released under
-[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) for
-non-commercial use. The Sentinel-2 imagery in Pan-ASGM contains modified
-Copernicus Sentinel data (2016-2025) and is subject to the Copernicus data terms.
+[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
+The Sentinel-2 imagery contains modified Copernicus Sentinel data (2016-2025)
+and is subject to the Copernicus data terms.
