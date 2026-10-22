@@ -26,24 +26,6 @@ uv run hf download oryota/pan-asgm --repo-type dataset --local-dir data/pan_asgm
 
 See the [dataset card](https://huggingface.co/datasets/oryota/pan-asgm) for the file format.
 
-## Repository layout
-
-The package `src/activity_index` is split by processing stage. A module imports only from its own or a lower stage
-(checked by `tests/test_layering.py`).
-
-| Path | Contents |
-|---|---|
-| `schema.py` | class names, annotated years, band order |
-| `data/` | Pan-ASGM file layout, band preprocessing, masks, LOSO splits |
-| `features/` | superpixels |
-| `models/` | segmentation backbones |
-| `training/` | training loop and losses |
-| `activity/` | Activity Index estimator and baselines |
-| `evaluation/` | segmentation metrics and Activity Index evaluation |
-
-`scripts/` has one folder per step (`data/`, `train/`, `infer/`, `evaluate/`), and model configs are in `configs/models/`.
-The code as of the paper, before this layout, is tagged [`ccai2026`](https://github.com/RyotaOkumura/asgm-activity-index/tree/ccai2026).
-
 ## Usage
 
 Configs for the four segmentation models are in `configs/models/`
@@ -99,3 +81,8 @@ The code and the Pan-ASGM labels, splits, and metadata are released under
 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
 The Sentinel-2 imagery contains modified Copernicus Sentinel data (2016-2025)
 and is subject to the Copernicus data terms.
+
+## Changelog
+
+- **2026-10**: Code reorganized by processing stage (results unchanged). Paper version: tag [`ccai2026`](https://github.com/RyotaOkumura/asgm-activity-index/tree/ccai2026).
+- **2026-10**: Initial release.
