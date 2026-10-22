@@ -9,18 +9,18 @@ CKPT="runs/${MODEL}/fold{fold}_seed{seed}/final_model.pth"
 
 for FOLD in 0 1 2 3 4 5 6 7 8; do
   for SEED in 1 2 3; do
-    uv run python scripts/train.py --config "configs/${MODEL}.yaml" --data-root "$DATA" \
+    uv run python scripts/train/train.py --config "configs/models/${MODEL}.yaml" --data-root "$DATA" \
       --fold "$FOLD" --seed "$SEED" --out "runs/${MODEL}/fold${FOLD}_seed${SEED}"
   done
 done
 
-uv run python scripts/eval_segmentation.py --config "configs/${MODEL}.yaml" --data-root "$DATA" \
+uv run python scripts/evaluate/eval_segmentation.py --config "configs/models/${MODEL}.yaml" --data-root "$DATA" \
   --checkpoint "$CKPT" --out "results/segmentation/${MODEL}"
 
 # The Activity Index uses the SegFormer-B2 front-end.
 if [ "$MODEL" = "segformer_b2" ]; then
-  uv run python scripts/infer_timeseries.py --config "configs/${MODEL}.yaml" --data-root "$DATA" \
+  uv run python scripts/infer/infer_timeseries.py --config "configs/models/${MODEL}.yaml" --data-root "$DATA" \
     --checkpoint "$CKPT" --out results/timeseries
-  uv run python scripts/eval_activity.py --data-root "$DATA" \
+  uv run python scripts/evaluate/eval_activity.py --data-root "$DATA" \
     --timeseries results/timeseries --out results/activity
 fi

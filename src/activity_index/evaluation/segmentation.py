@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from activity_index.data import IGNORE_INDEX, NUM_CLASSES
+from activity_index.schema import IGNORE_INDEX, NUM_CLASSES
 
 
 def class_iou(pred: np.ndarray, target: np.ndarray, num_classes: int = NUM_CLASSES,

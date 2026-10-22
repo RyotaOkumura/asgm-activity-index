@@ -6,7 +6,7 @@ Brier, and ECE are computed per tile. The table is the mean over all tiles,
 folds, and seeds (per-class IoU ignores tiles where the class is absent).
 
 Usage:
-  uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
+  uv run python scripts/evaluate/eval_segmentation.py --config configs/models/segformer_b2.yaml \
       --data-root data/pan_asgm --checkpoint "runs/segformer_b2/fold{fold}_seed{seed}/final_model.pth" \
       --out results/segmentation/segformer_b2
 """
@@ -23,10 +23,11 @@ import torch.nn.functional as F
 import yaml
 from tqdm import tqdm
 
-from activity_index.data import CLASSES, SegmentationDataset, load_folds, loso_split
-from activity_index.metrics import tile_metrics
+from activity_index.data.pan_asgm import SegmentationDataset, load_folds, loso_split
+from activity_index.evaluation.segmentation import tile_metrics
 from activity_index.models import build_model, load_checkpoint
-from activity_index.superpixels import average_over_superpixels, load_superpixels
+from activity_index.features.superpixels import average_over_superpixels, load_superpixels
+from activity_index.schema import CLASSES
 
 
 @torch.no_grad()

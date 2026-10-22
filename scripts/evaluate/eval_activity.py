@@ -7,7 +7,7 @@ of ``dir`` and ``sign_cum``, and ``worst`` = the lowest per-site mean of
 reliability filter.
 
 Usage:
-  uv run python scripts/eval_activity.py --data-root data/pan_asgm \
+  uv run python scripts/evaluate/eval_activity.py --data-root data/pan_asgm \
       --timeseries results/timeseries --out results/activity
 """
 
@@ -19,8 +19,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from activity_index.activity.evaluate import METHODS, TileSeries, evaluate_run
-from activity_index.data import ANNOTATED_YEARS, TileKey, load_folds, load_mask
+from activity_index.data.pan_asgm import TileKey, load_folds, load_mask
+from activity_index.evaluation.activity import METHODS, TileSeries, evaluate_run
+from activity_index.schema import ANNOTATED_YEARS
 
 
 def load_run(data_root: Path, ts_dir: Path, site: str):

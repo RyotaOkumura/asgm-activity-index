@@ -1,9 +1,9 @@
 """Temporal baselines of Table 1, reduced to the core changepoint decision.
 
 * Hard-label stacking: difference of the per-year hard labels at the
-  interval end points (computed in ``evaluate.py``).
+  interval end points (computed in ``activity_index.evaluation.activity``).
 * Hard labels + our estimator: the Activity Index estimator fed with hard
-  labels (computed in ``evaluate.py``).
+  labels (computed in ``activity_index.evaluation.activity``).
 * BFAST-equiv.: a Chow structural-break test; direction from the post-break slope.
 * LandTrendr-equiv.: a single-vertex piecewise-linear fit (ruptures Binseg);
   direction from the dominant segment.

@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import torch
 
-from activity_index.superpixels import average_over_superpixels, compute_superpixels, false_color
+from activity_index.features.superpixels import average_over_superpixels, compute_superpixels, false_color
 
 
 def test_average_over_superpixels_keeps_distribution():

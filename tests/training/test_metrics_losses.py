@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 import torch
 
-from activity_index.losses import CEDiceLoss, DiceLoss
-from activity_index.metrics import brier_score, class_iou, expected_calibration_error, tile_metrics
+from activity_index.evaluation.segmentation import brier_score, class_iou, expected_calibration_error, tile_metrics
+from activity_index.training.losses import CEDiceLoss, DiceLoss
 
 
 def test_class_iou_nan_for_absent_class_and_ignore():

@@ -2,11 +2,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-import activity_index.data as data
-from activity_index.data import (
-    IGNORE_INDEX, SegmentationDataset, TileKey, list_tiles, list_years, load_mask, loso_split, preprocess,
+import activity_index.data.pan_asgm as data
+from activity_index.data.pan_asgm import (
+    SegmentationDataset, TileKey, list_tiles, list_years, load_mask, loso_split, preprocess,
 )
-from activity_index.train import train
+from activity_index.schema import IGNORE_INDEX
+from activity_index.training.trainer import train
 
 
 def test_loso_split_never_puts_test_site_in_train(tiny_root):
