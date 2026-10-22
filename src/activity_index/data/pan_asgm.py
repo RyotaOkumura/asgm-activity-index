@@ -9,7 +9,7 @@ Dataset layout (``data_root``)::
 ``tile`` is ``r{row}c{col}`` with row, col in {0, 1, 2}: the 3x3 grid of
 2 km tiles that covers each 6 km site.
 
-Mask PNG values are 0 = unlabeled and 1..7 = the classes below. They are
+Mask PNG values are 0 = unlabeled and 1..7 = the classes in ``activity_index.schema``. They are
 remapped on load to 0..6, with unlabeled pixels set to ``IGNORE_INDEX``.
 """
 
@@ -25,28 +25,7 @@ import torch
 import yaml
 from torch.utils.data import Dataset
 
-CLASSES = (
-    "vegetation",
-    "bare_ground",
-    "active_pond",
-    "inactive_pond",
-    "artifact",
-    "cloud",
-    "cloud_shadow",
-)
-NUM_CLASSES = len(CLASSES)
-ACTIVE_POND_IDX = CLASSES.index("active_pond")
-CLOUD_IDX = CLASSES.index("cloud")
-CLOUD_SHADOW_IDX = CLASSES.index("cloud_shadow")
-IGNORE_INDEX = 255
-
-ANNOTATED_YEARS = (2016, 2020, 2024)
-
-# Band order inside each image GeoTIFF.
-ALL_BANDS = (
-    "B01", "B02", "B03", "B04", "B05", "B06", "B07",
-    "B08", "B8A", "B09", "B10", "B11", "B12",
-)
+from activity_index.schema import ALL_BANDS, ANNOTATED_YEARS, IGNORE_INDEX
 
 # Per-band mean / std applied after scaling reflectance to [0, 1]
 # (normalize_mode="imagenet"). RGB uses the ImageNet statistics.

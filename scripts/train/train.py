@@ -3,7 +3,7 @@
 The held-out site of the fold is excluded from training and is not read.
 
 Usage:
-  uv run python scripts/train.py --config configs/segformer_b2.yaml \
+  uv run python scripts/train/train.py --config configs/models/segformer_b2.yaml \
       --data-root data/pan_asgm --fold 0 --seed 1 --out runs/segformer_b2/fold0_seed1
 """
 
@@ -15,8 +15,8 @@ from pathlib import Path
 
 import yaml
 
-from activity_index.data import load_folds, loso_split
-from activity_index.train import train
+from activity_index.data.pan_asgm import load_folds, loso_split
+from activity_index.training.trainer import train
 
 
 def main() -> None:

@@ -1,7 +1,7 @@
 """Compute SLIC superpixels for every image (written to <data-root>/superpixels).
 
 Usage:
-  uv run python scripts/precompute_superpixels.py --data-root data/pan_asgm
+  uv run python scripts/data/precompute_superpixels.py --data-root data/pan_asgm
 """
 
 from __future__ import annotations
@@ -12,8 +12,8 @@ from pathlib import Path
 import numpy as np
 from tqdm import tqdm
 
-from activity_index.data import TileKey, list_tiles, list_years, load_folds, read_bands
-from activity_index.superpixels import BANDS, compute_superpixels, superpixel_path
+from activity_index.data.pan_asgm import TileKey, list_tiles, list_years, load_folds, read_bands
+from activity_index.features.superpixels import BANDS, compute_superpixels, superpixel_path
 
 
 def main() -> None:

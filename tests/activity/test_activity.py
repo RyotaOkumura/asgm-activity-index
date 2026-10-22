@@ -5,7 +5,7 @@ from activity_index.activity import baselines
 from activity_index.activity.estimator import (
     activity_index, gaussian_mean, interval_stat, reliable, trailing_ols, weighted_ols, windows_inside,
 )
-from activity_index.activity.evaluate import TileSeries, border_mask, direction_agreement, evaluate_run, gt_changes
+from activity_index.evaluation.activity import TileSeries, border_mask, direction_agreement, evaluate_run, gt_changes
 
 YEARS = np.arange(2016, 2026, dtype=np.float32)
 

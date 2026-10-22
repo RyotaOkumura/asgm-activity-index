@@ -28,26 +28,26 @@ See the [dataset card](https://huggingface.co/datasets/oryota/pan-asgm) for the 
 
 ## Usage
 
-Configs for the four segmentation models are in `configs/`
+Configs for the four segmentation models are in `configs/models/`
 (`unet`, `segformer_b2`, `mask2former`, `prithvi`). The commands below use SegFormer-B2.
 
 **1. Compute superpixels**
 
 ```bash
-uv run python scripts/precompute_superpixels.py --data-root data/pan_asgm
+uv run python scripts/data/precompute_superpixels.py --data-root data/pan_asgm
 ```
 
 **2. Train a segmentation model** (one fold and seed; the held-out site is not used)
 
 ```bash
-uv run python scripts/train.py --config configs/segformer_b2.yaml \
+uv run python scripts/train/train.py --config configs/models/segformer_b2.yaml \
     --data-root data/pan_asgm --fold 0 --seed 1 --out runs/segformer_b2/fold0_seed1
 ```
 
 **3. Evaluate the segmentation model**
 
 ```bash
-uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
+uv run python scripts/evaluate/eval_segmentation.py --config configs/models/segformer_b2.yaml \
     --data-root data/pan_asgm --checkpoint "runs/segformer_b2/fold{fold}_seed{seed}/final_model.pth" \
     --out results/segmentation/segformer_b2
 ```
@@ -55,10 +55,10 @@ uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
 **4. Compute the Activity Index and compare it with the baselines**
 
 ```bash
-uv run python scripts/infer_timeseries.py --config configs/segformer_b2.yaml \
+uv run python scripts/infer/infer_timeseries.py --config configs/models/segformer_b2.yaml \
     --data-root data/pan_asgm --checkpoint "runs/segformer_b2/fold{fold}_seed{seed}/final_model.pth" \
     --out results/timeseries
-uv run python scripts/eval_activity.py --data-root data/pan_asgm \
+uv run python scripts/evaluate/eval_activity.py --data-root data/pan_asgm \
     --timeseries results/timeseries --out results/activity
 ```
 
@@ -81,3 +81,8 @@ The code and the Pan-ASGM labels, splits, and metadata are released under
 [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
 The Sentinel-2 imagery contains modified Copernicus Sentinel data (2016-2025)
 and is subject to the Copernicus data terms.
+
+## Changelog
+
+- **2026-10**: Code reorganized by processing stage (results unchanged). Paper version: tag [`ccai2026`](https://github.com/RyotaOkumura/asgm-activity-index/tree/ccai2026).
+- **2026-10**: Initial release.

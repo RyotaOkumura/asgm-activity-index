@@ -8,13 +8,13 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from activity_index.data import NUM_CLASSES
+from activity_index.schema import NUM_CLASSES
 
 
 def build_model(model_cfg: dict, in_channels: int) -> nn.Module:
     """Build a model with its pretrained initialization.
 
-    ``model_cfg`` is the ``model`` section of a config in ``configs/``.
+    ``model_cfg`` is the ``model`` section of a config in ``configs/models/``.
     """
     name = model_cfg["name"]
     if name == "unet":
@@ -33,7 +33,7 @@ def build_model(model_cfg: dict, in_channels: int) -> nn.Module:
 
 
 def load_checkpoint(model: nn.Module, path: str, device: str = "cpu") -> nn.Module:
-    """Load weights saved by ``activity_index.train`` (or a ``state_dict`` file)."""
+    """Load weights saved by ``activity_index.training.trainer`` (or a ``state_dict`` file)."""
     state = torch.load(path, map_location=device, weights_only=False)
     if isinstance(state, dict) and "model_state_dict" in state:
         state = state["model_state_dict"]

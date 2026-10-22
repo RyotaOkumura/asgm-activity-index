@@ -9,7 +9,7 @@ averaged over superpixels. Saved per tile:
   argmax      (T, H, W)   uint8    superpixel class
 
 Usage (held-out site of each fold, as in the paper):
-  uv run python scripts/infer_timeseries.py --config configs/segformer_b2.yaml \
+  uv run python scripts/infer/infer_timeseries.py --config configs/models/segformer_b2.yaml \
       --data-root data/pan_asgm --checkpoint "runs/segformer_b2/fold{fold}_seed{seed}/final_model.pth" \
       --out results/timeseries
 """
@@ -24,12 +24,10 @@ import torch
 import yaml
 from tqdm import tqdm
 
-from activity_index.data import (
-    ACTIVE_POND_IDX, CLOUD_IDX, CLOUD_SHADOW_IDX, TileKey, list_tiles, list_years, load_folds,
-    preprocess, read_bands,
-)
+from activity_index.data.pan_asgm import TileKey, list_tiles, list_years, load_folds, preprocess, read_bands
+from activity_index.features.superpixels import average_over_superpixels, load_superpixels
 from activity_index.models import build_model, load_checkpoint
-from activity_index.superpixels import average_over_superpixels, load_superpixels
+from activity_index.schema import ACTIVE_POND_IDX, CLOUD_IDX, CLOUD_SHADOW_IDX
 
 
 @torch.no_grad()
