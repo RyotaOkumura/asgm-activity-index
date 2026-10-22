@@ -26,28 +26,46 @@ uv run hf download oryota/pan-asgm --repo-type dataset --local-dir data/pan_asgm
 
 See the [dataset card](https://huggingface.co/datasets/oryota/pan-asgm) for the file format.
 
+## Repository layout
+
+The package `src/activity_index` is split by processing stage. A module imports only from its own or a lower stage
+(checked by `tests/test_layering.py`).
+
+| Path | Contents |
+|---|---|
+| `schema.py` | class names, annotated years, band order |
+| `data/` | Pan-ASGM file layout, band preprocessing, masks, LOSO splits |
+| `features/` | superpixels |
+| `models/` | segmentation backbones |
+| `training/` | training loop and losses |
+| `activity/` | Activity Index estimator and baselines |
+| `evaluation/` | segmentation metrics and Activity Index evaluation |
+
+`scripts/` has one folder per step (`data/`, `train/`, `infer/`, `evaluate/`), and model configs are in `configs/models/`.
+The code as of the paper, before this layout, is tagged [`ccai2026`](https://github.com/RyotaOkumura/asgm-activity-index/tree/ccai2026).
+
 ## Usage
 
-Configs for the four segmentation models are in `configs/`
+Configs for the four segmentation models are in `configs/models/`
 (`unet`, `segformer_b2`, `mask2former`, `prithvi`). The commands below use SegFormer-B2.
 
 **1. Compute superpixels**
 
 ```bash
-uv run python scripts/precompute_superpixels.py --data-root data/pan_asgm
+uv run python scripts/data/precompute_superpixels.py --data-root data/pan_asgm
 ```
 
 **2. Train a segmentation model** (one fold and seed; the held-out site is not used)
 
 ```bash
-uv run python scripts/train.py --config configs/segformer_b2.yaml \
+uv run python scripts/train/train.py --config configs/models/segformer_b2.yaml \
     --data-root data/pan_asgm --fold 0 --seed 1 --out runs/segformer_b2/fold0_seed1
 ```
 
 **3. Evaluate the segmentation model**
 
 ```bash
-uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
+uv run python scripts/evaluate/eval_segmentation.py --config configs/models/segformer_b2.yaml \
     --data-root data/pan_asgm --checkpoint "runs/segformer_b2/fold{fold}_seed{seed}/final_model.pth" \
     --out results/segmentation/segformer_b2
 ```
@@ -55,10 +73,10 @@ uv run python scripts/eval_segmentation.py --config configs/segformer_b2.yaml \
 **4. Compute the Activity Index and compare it with the baselines**
 
 ```bash
-uv run python scripts/infer_timeseries.py --config configs/segformer_b2.yaml \
+uv run python scripts/infer/infer_timeseries.py --config configs/models/segformer_b2.yaml \
     --data-root data/pan_asgm --checkpoint "runs/segformer_b2/fold{fold}_seed{seed}/final_model.pth" \
     --out results/timeseries
-uv run python scripts/eval_activity.py --data-root data/pan_asgm \
+uv run python scripts/evaluate/eval_activity.py --data-root data/pan_asgm \
     --timeseries results/timeseries --out results/activity
 ```
 
